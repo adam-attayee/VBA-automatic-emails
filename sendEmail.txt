@@ -1,0 +1,40 @@
+Sub SaveAndAttachToEmail()
+    Dim OutApp As Object
+    Dim OutMail As Object
+    Dim FileName As String
+    Dim FilePath As String
+    Dim EmailBody As String
+
+    ' Set the file name for saving
+    FileName = ThisWorkbook.Name
+    
+    ' Set the file path to the current directory
+    FilePath = ThisWorkbook.Path & "\"
+
+    ' Save the current workbook
+    ThisWorkbook.Save
+
+    ' Create a new Outlook Application
+    Set OutApp = CreateObject("Outlook.Application")
+
+    ' Create a new mail item
+    Set OutMail = OutApp.CreateItem(0)
+
+    ' Create email body
+    EmailBody = "Hello," & vbCrLf & vbCrLf & _
+                "Please find the attached file." & vbCrLf & vbCrLf & "Thank you"
+
+    ' Attach the saved workbook to the email
+    With OutMail
+        .To = "recipient@example.com" ' Add the emails of the people you want to send the email to, separate emails by a comma if more than 1 recipient.
+        .CC = "ccrecipient1@example.com" ' Use this to CC people
+        .Subject = "Attachment Test" ' Set the email subject
+        .Body = EmailBody
+        .Attachments.Add FilePath & FileName ' Attach the saved file
+        .Display ' Display the email but do not send
+    End With
+
+    ' Clean up
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+End Sub
